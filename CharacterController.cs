@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class CharacterController : MonoBehaviour
 {
+    private int health = 3;
     private float h = 0f;
     private float v = 0f;
     private float r = 0f;
@@ -14,7 +15,7 @@ public class CharacterController : MonoBehaviour
     
     private float moveSpeed = 5f;
     public float rotSpeed = 50f;
-    public float jumpPower = 10f;
+    public float jumpPower = 30f;
 
     private bool runSwitch;
     private bool jumpSwitch;
@@ -39,11 +40,13 @@ public class CharacterController : MonoBehaviour
         
         if(Input.GetButtonDown("Jump"))
         {
-            jumpSwitch = true;
-            Jump();
+            //if jump is false  , I can jump
+            if(!jumpSwitch)
+            {
+                Jump();
+                StartCoroutine("WaitForJump");
+            }
         }
-        
-        
         if(h != 0 || v !=0)
         {
             runSwitch = true;
@@ -52,6 +55,18 @@ public class CharacterController : MonoBehaviour
         else{
             runSwitch = false;
             animator.SetBool("run",false);
+        }
+        if(Input.GetButtonDown("Fire1"))
+        {
+            Attack1();
+        }
+        if(Input.GetButtonDown("Fire2"))
+        {
+            Attack2();
+        }
+        if(Input.GetButtonDown("Fire3"))
+        {
+            Attack3();
         }
     }
     private void Move(float h, float v) {
@@ -63,15 +78,59 @@ public class CharacterController : MonoBehaviour
     }
     private void Jump()
     {
-        if(!jumpSwitch)
+        if(jumpSwitch)
         {
             return;
         }
-        animator.SetBool("jump",true);
+        animator.SetTrigger("jump");
         rigidbody.AddForce(Vector3.up * jumpPower, ForceMode.Impulse);
+        jumpSwitch  = true;
 
-        
+    }
+    /// <summary>
+    /// OnCollisionExit is called when this collider/rigidbody has
+    /// stopped touching another rigidbody/collider.
+    /// </summary>
+    /// <param name="other">The Collision data associated with this collision.</param>
+    private void OnCollisionExit(Collision other)
+    {
+        if(other.gameObject.name == "Terrain")
+        {
+            animator.SetTrigger("fly");
+        }
+    }
+    private void OnCollisionEnter(Collision other) {
+        if(other.gameObject.name == "Terrain")
+        {
+            animator.SetTrigger("land");
+        }
+        if(other.gameObject.name == "DeathPlane")
+        {
+            Debug.Log("Death");
+        }
+    }
+    IEnumerator WaitForJump()
+    {
+        yield return new WaitForSeconds(1f);
         jumpSwitch = false;
     }
-    
+    public void Attack1()
+    {
+        Debug.Log("click Z attack 1");
+
+    }
+    public void Attack2()
+    {
+        Debug.Log("click X attack 2");
+    }
+    public void Attack3()
+    {
+        Debug.Log("click C attack 3");
+    }
+    private void Dead() {
+        if(health <= 0)
+        {
+            Debug.Log("Add Dead Activation");
+        }
+    }
 }
