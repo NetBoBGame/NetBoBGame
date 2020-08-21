@@ -13,7 +13,7 @@ public class AuthManager : MonoBehaviour
     public InputField emailField;
     public InputField passwordField;
     public Button signInButton;
-    
+
     public static FirebaseApp firebaseApp;
     public static FirebaseAuth firebaseAuth;
 
@@ -23,59 +23,56 @@ public class AuthManager : MonoBehaviour
     {
         signInButton.interactable = false;
 
-        FirebaseApp.CheckAndFixDependenciesAsync().ContinueWith(task => 
+        FirebaseApp.CheckAndFixDependenciesAsync().ContinueWithOnMainThread(task =>
+        {
+            var result = task.Result;
+
+            if (result != DependencyStatus.Available)
             {
-                var result = task.Result;
-
-                if(result != DependencyStatus.Available)
-                {
-                    Debug.LogError(result.ToString());
-                    IsFirebaseReady = false;
-                }
-                else{
-                    IsFirebaseReady = true;
-
-                    firebaseApp = FirebaseApp.DefaultInstance;
-                    firebaseAuth = FirebaseAuth.DefaultInstance;
-                }
-                signInButton.interactable = IsFirebaseReady;
+                Debug.LogError(result.ToString());
+                IsFirebaseReady = false;
             }
-        );
+            else
+            {
+                Debug.Log("OH kay");
+                IsFirebaseReady = true;
+
+                firebaseApp = FirebaseApp.DefaultInstance;
+                firebaseAuth = FirebaseAuth.DefaultInstance;
+            }
+
+            signInButton.interactable = IsFirebaseReady;
+        });
     }
 
     public void SignIn()
     {
-        if(!IsFirebaseReady || IsSignInOnProgress || User != null)
-        {
-            return;
-        }
+        if (!IsFirebaseReady || IsSignInOnProgress || User != null) return;
+
         IsSignInOnProgress = true;
         signInButton.interactable = false;
 
         firebaseAuth.SignInWithEmailAndPasswordAsync(emailField.text, passwordField.text).ContinueWithOnMainThread(
-            (task => 
+            task =>
             {
-                Debug.Log($"Sign in status: {task.Status}");
+                Debug.Log($"Sign in status : {task.Status}");
 
-                IsSignInOnProgress  = false;
+                IsSignInOnProgress = false;
                 signInButton.interactable = true;
 
-                if(task.IsFaulted)
+                if (task.IsFaulted)
                 {
                     Debug.LogError(task.Exception);
                 }
-                else if(task.IsCanceled)
+                else if (task.IsCanceled)
                 {
-                    Debug.LogError("Signin canceled");
+                    Debug.LogError("It's canceled");
                 }
-                else{
+                else
+                {
                     User = task.Result;
                     SceneManager.LoadScene("Lobby");
-                    Debug.Log(User.Email);
-                    
                 }
-            })
-        );
-        
+            });
     }
 }

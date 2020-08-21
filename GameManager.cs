@@ -23,54 +23,45 @@ public class GameManager : MonoBehaviourPunCallbacks
     public GameObject ballPrefab;
 
     private int[] playerScores;
-
+    private bool SpawnSwitch;
     private void Start()
     {
-        playerScores = new[] {0,0};
-        //each Player activation each 1 time.
-        SpawnPlayer();
-        if(PhotonNetwork.IsMasterClient)
+        playerScores = new[] {0, 0};
+        if(!SpawnSwitch)
         {
-            SpawnBall();
+            SpawnPlayer();
+            SpawnSwitch = !SpawnSwitch;
+            Debug.Log("SpawnSwitch" + SpawnSwitch);
         }
+        
+
+        if (PhotonNetwork.IsMasterClient) SpawnBall();
     }
 
     private void SpawnPlayer()
     {
-        //inside we handle character 0, 1
-        var localPlayerIndex = PhotonNetwork.LocalPlayer.ActorNumber -1 ;
+        var localPlayerIndex = PhotonNetwork.LocalPlayer.ActorNumber - 1;
         var spawnPosition = spawnPositions[localPlayerIndex % spawnPositions.Length];
 
-        PhotonNetwork.Instantiate(playerPrefab.name,spawnPosition.position,spawnPosition.rotation);
+        PhotonNetwork.Instantiate(playerPrefab.name, spawnPosition.position, Quaternion.identity);
     }
 
     private void SpawnBall()
     {
-        PhotonNetwork.Instantiate(ballPrefab.name,Vector2.zero, Quaternion.identity);
+        PhotonNetwork.Instantiate(ballPrefab.name, Vector2.zero, Quaternion.identity).GetComponent<Ball>();
     }
 
     public override void OnLeftRoom()
     {
-        //one person is left except others.
         SceneManager.LoadScene("Lobby");
     }
-    public void Leave()
-    {
-        PhotonNetwork.LeaveRoom();
-    }
+
     public void AddScore(int playerNumber, int score)
     {
-        //only master update score.
-        if(!PhotonNetwork.IsMasterClient)
-        {
-            return;
-        }
-        playerScores[playerNumber -1 ] += score;
-
-        //everybody shouting.
-        photonView.RPC("RPCUpdateScoreText", RpcTarget.All,playerScores[0].ToString(),playerScores[1].ToString());
+        playerScores[playerNumber - 1] += score;
+        
+        photonView.RPC("RPCUpdateScoreText", RpcTarget.All, playerScores[0].ToString(), playerScores[1].ToString());
     }
-
 
     
     [PunRPC]
