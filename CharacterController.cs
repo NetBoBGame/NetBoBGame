@@ -68,6 +68,7 @@ public class CharacterController : MonoBehaviour
         {
             Attack3();
         }
+        Dead();
     }
     private void Move(float h, float v) {
         animator.SetBool("run", true);
@@ -117,20 +118,29 @@ public class CharacterController : MonoBehaviour
     public void Attack1()
     {
         Debug.Log("click Z attack 1");
-
-    }
+        animator.SetTrigger("attack1");
+    }   
     public void Attack2()
     {
         Debug.Log("click X attack 2");
+        animator.SetTrigger("attack2");
     }
     public void Attack3()
     {
-        Debug.Log("click C attack 3");
+        Debug.Log("click C pilsal 3");
+        animator.SetTrigger("attack3");
+    }
+    private void Damaged()
+    {
+        //need to fill the other attack me . 
+        animator.SetTrigger("damaged");
+        Debug.Log("damaged");
     }
     private void Dead() {
         if(health <= 0)
         {
             Debug.Log("Add Dead Activation");
+            animator.SetTrigger("dead");
         }
     }
 }
