@@ -29,13 +29,7 @@ public class GameController : MonoBehaviourPunCallbacks
         }
         
     }
-    private void SpawnPlayer()
-    {
-        var localPlayerIndex = PhotonNetwork.LocalPlayer.ActorNumber - 1;
-        var spawnPosition = spawnPositions[localPlayerIndex % spawnPositions.Length];
-
-        PhotonNetwork.Instantiate(playerPrefab.name, spawnPosition.position, Quaternion.identity);
-    }
+  
     private static GameController instance;
     // Update is called once per frame
     void Update()
