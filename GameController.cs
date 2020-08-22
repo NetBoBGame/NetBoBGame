@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -36,6 +36,10 @@ public class GameController : MonoBehaviourPunCallbacks
 
         PhotonNetwork.Instantiate(playerPrefab.name, spawnPosition.position, Quaternion.identity);
     }
+    private void test()
+    {
+        
+    }
     private static GameController instance;
     // Update is called once per frame
     void Update()
@@ -55,4 +59,4 @@ public class GameController : MonoBehaviourPunCallbacks
     {
         SceneManager.LoadScene("Lobby");
     }
-}
+}   
