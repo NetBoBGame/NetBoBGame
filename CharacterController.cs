@@ -34,6 +34,13 @@ public class CharacterController : MonoBehaviourPun
         animator = GetComponent<Animator>();
 
         playerScores = new[] {0, 0};
+        if(photonView.IsMine)
+        {
+            this.name  = "Player1";
+        }
+        else{
+            this.name = "Player2";
+        }
     }
     
 
@@ -112,10 +119,10 @@ public class CharacterController : MonoBehaviourPun
         }
     }
     private void OnCollisionEnter(Collision other) {
-        if(other.gameObject.name == "Terrain")
-        {
-            animator.SetTrigger("land");
-        }
+        // if(other.gameObject.name == "Terrain")
+        // {
+        //     animator.SetTrigger("land");
+        // }
         if(other.gameObject.name == "DeathPlane")
         {
             Debug.Log("Death");

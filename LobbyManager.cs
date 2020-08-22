@@ -54,6 +54,6 @@ public class LobbyManager : MonoBehaviourPunCallbacks
     {
         connectionInfoText.text = "Connected with Room";
         //anybody in this room all together move to Game
-        PhotonNetwork.LoadLevel("Main");
+        PhotonNetwork.LoadLevel("GameScene");
     }
 }

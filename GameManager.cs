@@ -40,6 +40,7 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     private void SpawnPlayer()
     {
+        Debug.Log("asdffas");
         var localPlayerIndex = PhotonNetwork.LocalPlayer.ActorNumber - 1;
         var spawnPosition = spawnPositions[localPlayerIndex % spawnPositions.Length];
 

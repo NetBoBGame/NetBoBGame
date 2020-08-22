@@ -5,10 +5,12 @@ using UnityEngine.SceneManagement;
 using Photon.Pun;
 public class GameController : MonoBehaviourPunCallbacks
 {
-    public Transform[] spawnPositions;
+    
+    
     public GameObject playerPrefab;
     private bool SpawnSwitch;
-    public int[] playerScores;
+    private int[] playerScores;
+
     public static GameController Instance
     {
         get
@@ -20,7 +22,7 @@ public class GameController : MonoBehaviourPunCallbacks
    
     private void Start()
     {
-        playerScores = new[] {0, 0};
+        playerScores = new[] {3, 3};
         if(!SpawnSwitch)
         {
             SpawnPlayer();
@@ -31,21 +33,19 @@ public class GameController : MonoBehaviourPunCallbacks
     }
     private void SpawnPlayer()
     {
+        Debug.Log("this is GameCOntroller's Spawn");
         var localPlayerIndex = PhotonNetwork.LocalPlayer.ActorNumber - 1;
-        var spawnPosition = spawnPositions[localPlayerIndex % spawnPositions.Length];
+        
 
-        PhotonNetwork.Instantiate(playerPrefab.name, spawnPosition.position, Quaternion.identity);
+        PhotonNetwork.Instantiate(playerPrefab.name, new Vector3(0,0,0), Quaternion.identity);
     }
-    private void test()
-    {
-        
-    }
+ 
     private static GameController instance;
-    // Update is called once per frame
-    void Update()
+        public override void OnLeftRoom()
     {
-        
+        SceneManager.LoadScene("Lobby");
     }
+ 
     private void Damaged(int playerNumber, int score)
     {
         //need to fill the other attack me . 
@@ -55,8 +55,5 @@ public class GameController : MonoBehaviourPunCallbacks
             OnLeftRoom();
         }
     }
-    public override void OnLeftRoom()
-    {
-        SceneManager.LoadScene("Lobby");
-    }
+
 }   
