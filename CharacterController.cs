@@ -36,7 +36,7 @@ public class CharacterController : MonoBehaviourPun
         tr = GetComponent<Transform>();
         animator = GetComponent<Animator>();
 
-        playerScores = new[] {0, 0};
+        
         
         if(photonView.IsMine)
         {
@@ -112,11 +112,7 @@ public class CharacterController : MonoBehaviourPun
         jumpSwitch  = true;
 
     }
-    /// <summary>
-    /// OnCollisionExit is called when this collider/rigidbody has
-    /// stopped touching another rigidbody/collider.
-    /// </summary>
-    /// <param name="other">The Collision data associated with this collision.</param>
+    
     private void OnCollisionExit(Collision other)
     {
         if(other.gameObject.name == "Terrain")
@@ -133,13 +129,7 @@ public class CharacterController : MonoBehaviourPun
         {
             Debug.Log("Death");
         }
-        if(other.gameObject != photonView.IsMine)
-        {
-            if(AttackSwitch)
-            {
-                
-            }
-        }
+    
     }
     IEnumerator WaitForJump()
     {
@@ -173,7 +163,7 @@ public class CharacterController : MonoBehaviourPun
         StartCoroutine("WaitForAttack");
     }
 
-    private void Dead() {
+    public void Dead() {
         if(health <= 0)
         {
             Debug.Log("Add Dead Activation");
