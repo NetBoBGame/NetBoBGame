@@ -1,8 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
 
-public class CharacterController : MonoBehaviour
+public class CharacterController : MonoBehaviourPun
 {
     private int health = 3;
     private float h = 0f;
@@ -21,6 +22,9 @@ public class CharacterController : MonoBehaviour
     private bool jumpSwitch;
 
     private Vector3 movement;
+
+    
+    private int[] playerScores;
     
     // Start is called before the first frame update
     void Start()
@@ -28,11 +32,18 @@ public class CharacterController : MonoBehaviour
         rigidbody  = GetComponent<Rigidbody>();
         tr = GetComponent<Transform>();
         animator = GetComponent<Animator>();
+
+        playerScores = new[] {0, 0};
     }
+    
 
     // Update is called once per frame
     void Update()
     {
+        if(!photonView.IsMine)
+        {
+            return;
+        }
         runSwitch = false;
         
         h = Input.GetAxis("Horizontal");
@@ -119,6 +130,7 @@ public class CharacterController : MonoBehaviour
     {
         Debug.Log("click Z attack 1");
         animator.SetTrigger("attack1");
+        
     }   
     public void Attack2()
     {
@@ -130,12 +142,7 @@ public class CharacterController : MonoBehaviour
         Debug.Log("click C pilsal 3");
         animator.SetTrigger("attack3");
     }
-    private void Damaged()
-    {
-        //need to fill the other attack me . 
-        animator.SetTrigger("damaged");
-        Debug.Log("damaged");
-    }
+
     private void Dead() {
         if(health <= 0)
         {
