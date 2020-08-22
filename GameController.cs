@@ -46,7 +46,7 @@ public class GameController : MonoBehaviourPunCallbacks
         SceneManager.LoadScene("Lobby");
     }
  
-    private void Damaged(int playerNumber, int score)
+    public void Damaged(int playerNumber, int score)
     {
         //need to fill the other attack me . 
         playerScores[playerNumber - 1] -= score;

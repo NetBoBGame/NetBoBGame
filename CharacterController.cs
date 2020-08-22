@@ -27,6 +27,7 @@ public class CharacterController : MonoBehaviourPun
     private int[] playerScores;
     private Camera m_Camera;
     
+    private bool AttackSwitch;
     // Start is called before the first frame update
     void Start()
     {
@@ -43,7 +44,7 @@ public class CharacterController : MonoBehaviourPun
             //this.name  = "Player1";
         }
         else{
-            m_Camera.enabled = false;
+            
             //this.name = "Player2";
         }
     }
@@ -132,27 +133,44 @@ public class CharacterController : MonoBehaviourPun
         {
             Debug.Log("Death");
         }
+        if(other.gameObject != photonView.IsMine)
+        {
+            if(AttackSwitch)
+            {
+                
+            }
+        }
     }
     IEnumerator WaitForJump()
     {
         yield return new WaitForSeconds(1f);
         jumpSwitch = false;
     }
+    IEnumerator WaitForAttack()
+    {
+        yield return new WaitForSeconds(0.3f);
+        AttackSwitch = false;
+    }
     public void Attack1()
     {
+        AttackSwitch = true;
         Debug.Log("click Z attack 1");
         animator.SetTrigger("attack1");
-        
+        StartCoroutine("WaitForAttack");
     }   
     public void Attack2()
     {
+        AttackSwitch = true;
         Debug.Log("click X attack 2");
         animator.SetTrigger("attack2");
+        StartCoroutine("WaitForAttack");
     }
     public void Attack3()
     {
+        AttackSwitch = true;
         Debug.Log("click C pilsal 3");
         animator.SetTrigger("attack3");
+        StartCoroutine("WaitForAttack");
     }
 
     private void Dead() {
