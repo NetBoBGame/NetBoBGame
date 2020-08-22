@@ -25,21 +25,26 @@ public class CharacterController : MonoBehaviourPun
 
     
     private int[] playerScores;
+    private Camera m_Camera;
     
     // Start is called before the first frame update
     void Start()
     {
+        m_Camera = Camera.main;
         rigidbody  = GetComponent<Rigidbody>();
         tr = GetComponent<Transform>();
         animator = GetComponent<Animator>();
 
         playerScores = new[] {0, 0};
+        
         if(photonView.IsMine)
         {
-            this.name  = "Player1";
+            
+            //this.name  = "Player1";
         }
         else{
-            this.name = "Player2";
+            m_Camera.enabled = false;
+            //this.name = "Player2";
         }
     }
     
